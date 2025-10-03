@@ -13,3 +13,7 @@ featureCounts -T 8 -p -t exon -g gene_id \
   -a /file/to/reference/genome/Homo_sapiens.GRCh38.114.gtf \
   -o counts.txt \
   /file/to/input/bam/files/*.bam
+
+#You can move over to R to perform differential gene expression analysis after this step
+#If you don't require transcript-level insights (only gene-level)
+#If you require transcript-level insights please continue to the next step: Stringtie
