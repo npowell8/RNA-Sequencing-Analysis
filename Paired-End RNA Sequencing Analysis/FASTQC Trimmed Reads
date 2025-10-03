@@ -1,0 +1,12 @@
+#HPC used was AIRE
+
+#!/bin/bash
+#SBATCH --job-name=rnaseq         
+#SBATCH --output=rnaseq.out        
+#SBATCH --error=rnaseq.err         
+#SBATCH --time=04:00:00            
+#SBATCH --cpus-per-task=8          
+#SBATCH --mem=16G   
+
+#Perform FASTQC on trimmed reads
+fastqc -o /path/to/output/directory --threads 4 /path/to/trimmed/read1_files/*_1.fq.gz /path/to/trimmed/read2_files/*_2.fq.gz
