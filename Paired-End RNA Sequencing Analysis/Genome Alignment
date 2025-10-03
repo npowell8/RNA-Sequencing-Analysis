@@ -1,0 +1,35 @@
+#HPC used was AIRE
+
+#!/bin/bash
+#SBATCH --job-name=rnaseq         
+#SBATCH --output=rnaseq.out        
+#SBATCH --error=rnaseq.err
+#SBATCH --time=06:00:00
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=80G
+
+trimmed_files_directory=/path/to/trimmed/files
+genome_dir=/path/to/genome/index
+output_directory=/path/to/ouput/directory
+
+#Make output directory if it doesn't exist
+mkdir -p "$output_directory"
+
+#Loop through all single-end Read 1 files (ending in _1_val_1.fq.gz) 
+#Inside the trimmed files directory
+for R1 in "$trimmed_files_directory"/*_1_val_1.fq.gz; do
+    #Extract base sample name e.g. "sample1_1_val_1.fq.gz" → "sample1"
+    SAMPLE=$(basename "$R1" | sed 's/_1_val_1.fq.gz//')
+    #Define the corresponding Read 2 file for this sample
+    R2="$trimmed_files_directory/${SAMPLE}_2_val_2.fq.gz"
+
+#Perform alignment using STAR
+    STAR \
+      --runThreadN 8 \
+      --genomeDir "$genome_dir" \
+      --readFilesIn "$R1" "$R2" \
+      --readFilesCommand zcat \
+      --outSAMtype BAM SortedByCoordinate \
+      --outFileNamePrefix "$output_directory/${SAMPLE}_" \
+      --outSAMattributes All
+done
