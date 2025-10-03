@@ -1,0 +1,20 @@
+#HPC used was AIRE
+
+#!/bin/bash
+#SBATCH --job-name=trim
+#SBATCH --output=logs/trim_%A_%a.out
+#SBATCH --error=logs/trim_%A_%a.err
+#SBATCH --time=01:00:00
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=4G
+#SBATCH --array=0-20
+
+#Define read 1 files
+R1_FILES=($(ls /path/to/read1_files/*_1.fq.gz))
+R1=${R1_FILES[$SLURM_ARRAY_TASK_ID]}
+
+#Define read 2 files
+R2=${R1/_1.fq.gz/_2.fq.gz}
+
+#Perform trimming using TrimGalore
+trim_galore --paired --quality 20 --length 20 "$R1" "$R2"
