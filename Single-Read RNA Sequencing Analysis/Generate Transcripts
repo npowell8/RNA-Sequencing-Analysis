@@ -1,0 +1,21 @@
+#HPC used was AIRE
+
+#This is an optional step and is ideal if your research requires transcript-level insights
+
+#!/bin/bash
+#SBATCH --job-name=rnaseq         
+#SBATCH --output=rnaseq.out        
+#SBATCH --error=rnaseq.err         
+#SBATCH --time=06:00:00            
+#SBATCH --cpus-per-task=8          
+#SBATCH --mem=80G
+
+gtf=/path/to/genome/index/Homo_sapiens.GRCh38.114.gtf
+bam_file_directory=/path/to/aligned/bam/files/
+output_directory=/path/to/output/directory
+
+for bam in $bam_file_directory/*.bam; do
+    sample=$(basename "$bam" .bam)
+
+    stringtie "$bam" -p 8 -G $gtf -e -A $output_directory/${sample}.abundance.txt -o $output_directory/${sample}.gtf
+done
