@@ -1,0 +1,33 @@
+#HPC used was AIRE
+
+#!/bin/bash
+#SBATCH --job-name=rnaseq         
+#SBATCH --output=rnaseq.out        
+#SBATCH --error=rnaseq.err         
+#SBATCH --time=04:00:00            
+#SBATCH --cpus-per-task=8          
+#SBATCH --mem=16G   
+
+#Define files
+trimmed_files_directory=/path/to/trimmed/files
+genome_dir=/path/to/genome_index
+output_directory=/path/to/output/directory
+
+#Loop over FASTQ files
+for FILE in $trimmed_files_directory/*R1*.fastq.gz; do
+  #Extract sample name from filename
+    BASENAME=$(basename "$FILE")
+    SAMPLE=$(echo $BASENAME | cut -d'_' -f1-4)
+
+#Run STAR 
+    STAR \
+      --runThreadN 4 \
+      --runMode alignReads \
+      --genomeDir $genome_dir \
+      --readFilesIn $FILE \
+      --readFilesCommand zcat \
+      --outSAMtype BAM SortedByCoordinate \
+      --outFileNamePrefix $output_directory/${SAMPLE}_ \
+      --outSAMattributes All
+
+done
