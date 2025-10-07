@@ -1,0 +1,18 @@
+#HPC used was AIRE
+
+#!/bin/bash
+#SBATCH --job-name=rnaseq         
+#SBATCH --output=rnaseq.out        
+#SBATCH --error=rnaseq.err         
+#SBATCH --time=06:00:00            
+#SBATCH --cpus-per-task=8          
+#SBATCH --mem=80G   
+
+#Use STAR to generate genome index for alignment 
+
+STAR --runThreadN 8 \
+     --runMode genomeGenerate \
+     --genomeDir /path/to/output/directory/for/index \
+     --genomeFastaFiles /path/to/fasta/file/Homo_sapiens.GRCh38.dna.primary_assembly.fa \
+     --sjdbGTFfile /path/to/gtf/file/Homo_sapiens.GRCh38.114.gtf \
+     --sjdbOverhang 150
