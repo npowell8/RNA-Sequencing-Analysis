@@ -1,0 +1,17 @@
+#HPC used was AIRE
+
+#!/bin/bash
+#SBATCH --job-name=trim
+#SBATCH --output=logs/trim_%A_%a.out
+#SBATCH --error=logs/trim_%A_%a.err
+#SBATCH --time=01:00:00
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=4G
+#SBATCH --array=0-23
+
+#Create an array
+FILES=($(ls /path/to/input/files/*.fastq.gz))
+FILE=${FILES[$SLURM_ARRAY_TASK_ID]}
+
+#Run TrimGalore
+trim_galore --quality 20 --length 20 "$FILE"
