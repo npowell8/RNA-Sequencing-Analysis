@@ -1,0 +1,16 @@
+#HPC used was AIRE
+
+#!/bin/bash
+#SBATCH --job-name=rnaseq         
+#SBATCH --output=rnaseq.out        
+#SBATCH --error=rnaseq.err         
+#SBATCH --time=06:00:00            
+#SBATCH --cpus-per-task=8          
+#SBATCH --mem=80G
+
+#Generate counts using featureCounts
+featureCounts -T 8 -t exon -g gene_id -a /path/to/genome/index/Homo_sapiens.GRCh38.114.gtf -o counts.txt path/to/input/bams/*.bam
+
+#You can move over to R to perform differential gene expression analysis after this step
+#If you don't require transcript-level insights (only gene-level)
+#If you require transcript-level insights please continue to the next step: Stringtie
